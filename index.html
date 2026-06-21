@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moura | Martelinho de Ouro & Estética Automotiva Premium</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: {
+                            50: '#fefdf0',
+                            100: '#fcf6be',
+                            200: '#f8ee88',
+                            300: '#f1df4f',
+                            400: '#e5ca24',
+                            500: '#d4af37', // Dourado Metálico Principal
+                            600: '#b48c26',
+                            700: '#8e661c',
+                            800: '#6f4e1a',
+                            900: '#5c3f19',
+                            950: '#35210b',
+                        },
+                        dark: {
+                            900: '#0A0A0A', // Preto profundo
+                            800: '#121212', // Cinza muito escuro
+                            700: '#1A1A1A', // Cinza intermediário
+                            600: '#262626',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'Playfair Display', 'serif'],
+                        sans: ['Montserrat', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Cinzel & Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome (Ícones de Luxo) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- JS & ALPINE LOGIC DEFINED BEFORE ALPINE INITIALIZATION -->
+    <script>
+        function landingApp() {
+            return {
+                scrolled: false,
+                mobileMenuOpen: false,
+                activeSlider: 'martelinho',
+                sliderPos: 50,
+                isSliding: false,
+                budgetModal: false,
+                formData: {
+                    name: '',
+                    carModel: '',
+                    carYear: '',
+                    service: 'Martelinho de Ouro',
+                    notes: ''
+                },
+
+                init() {
+                    // Track header scroll state
+                    window.addEventListener('scroll', () => {
+                        this.scrolled = window.scrollY > 50;
+                    });
+                },
+
+                // Open Modal with Predefined Service
+                openBudgetModal(preselectedService = null) {
+                    if (preselectedService) {
+                        this.formData.service = preselectedService;
+                    }
+                    this.budgetModal = true;
+                },
+
+                // Before and After drag mechanics
+                startSliding(e) {
+                    this.isSliding = true;
+                    this.updateSliderPos(e);
+                },
+                slideMove(e) {
+                    if (!this.isSliding) return;
+                    this.updateSliderPos(e);
+                },
+                stopSliding() {
+                    this.isSliding = false;
+                },
+                updateSliderPos(e) {
+                    // Handle responsive mouse coordinates vs touch events
+                    let container;
+                    if (this.activeSlider === 'martelinho') container = document.getElementById('slider-martelinho');
+                    else if (this.activeSlider === 'polimento') container = document.getElementById('slider-polimento');
+                    else if (this.activeSlider === 'vitrificacao') container = document.getElementById('slider-vitrificacao');
+                    else if (this.activeSlider === 'estetica') container = document.getElementById('slider-estetica');
+                    
+                    if (!container) return;
+
+                    const rect = container.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const offsetX = clientX - rect.left;
+                    let percentage = (offsetX / rect.width) * 100;
+
+                    if (percentage < 0) percentage = 0;
+                    if (percentage > 100) percentage = 100;
+
+                    this.sliderPos = percentage.toFixed(2);
+                },
+
+                // Generate Custom Whatsapp URL and Redirect
+                generateWhatsAppLink() {
+                    const phoneNumber = '5563999887711'; // Moura WhatsApp Number Placeholder
+                    const greeting = `Olá, Moura Estética Automotiva! Gostaria de um orçamento premium para meu veículo.`;
+                    
+                    const details = `\n\n*DADOS DO PEDIDO:*\n• *Nome:* ${this.formData.name}\n• *Veículo:* ${this.formData.carModel} ${this.formData.carYear ? `(${this.formData.carYear})` : ''}\n• *Serviço:* ${this.formData.service}${this.formData.notes ? `\n• *Anotações:* ${this.formData.notes}` : ''}`;
+                    
+                    const encodedText = encodeURIComponent(greeting + details);
+                    const finalUrl = `https://wa.me/${phoneNumber}?text=${encodedText}`;
+
+                    // Redirect user
+                    window.open(finalUrl, '_blank');
+                    this.budgetModal = false;
+                }
+            }
+        }
+    </script>
+
+    <!-- Alpine.js com defer para inicialização segura pós-DOM e função declarada -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #b48c26;
+        }
+        /* Glow gold effects */
+        .gold-glow {
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+        }
+        .gold-glow-hover:hover {
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.3);
+            border-color: #D4AF37;
+        }
+        /* Text gradient for luxury titles */
+        .gold-text-gradient {
+            background: linear-gradient(135deg, #FFF 30%, #D4AF37 70%, #F5E093 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gold-metallic-gradient {
+            background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+        }
+        /* Custom animations */
+        @keyframes subtleZoom {
+            0% { transform: scale(1.0); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1.0); }
+        }
+        .animate-zoom {
+            animation: subtleZoom 25s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-dark-900 text-gray-100 font-sans selection:bg-gold-500 selection:text-dark-900 overflow-x-hidden" x-data="landingApp()">
+
+    <!-- HEADER / NAVIGATION -->
+    <header class="fixed top-0 left-0 w-full z-50 bg-dark-900/90 backdrop-blur-md border-b border-gold-500/10 transition-all duration-300" 
+            :class="{ 'py-3 bg-dark-900/95 shadow-lg border-gold-500/20' : scrolled, 'py-5' : !scrolled }">
+        <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
+            <!-- Brand Logo -->
+            <a href="#" class="flex flex-col items-start group">
+                <span class="font-serif text-2xl lg:text-3xl font-black tracking-[0.2em] text-white group-hover:text-gold-500 transition-colors duration-300">
+                    MOURA
+                </span>
+                <span class="text-[9px] tracking-[0.45em] text-gold-500 font-semibold uppercase -mt-1">
+                    Estética Automotiva
+                </span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-xs font-semibold tracking-widest uppercase">
+                <a href="#sobre" class="hover:text-gold-500 transition-colors duration-300 py-2">Sobre</a>
+                <a href="#servicos" class="hover:text-gold-500 transition-colors duration-300 py-2">Serviços</a>
+                <a href="#diferenciais" class="hover:text-gold-500 transition-colors duration-300 py-2">Diferenciais</a>
+                <a href="#antes-depois" class="hover:text-gold-500 transition-colors duration-300 py-2">Antes & Depois</a>
+                <a href="#depoimentos" class="hover:text-gold-500 transition-colors duration-300 py-2">Depoimentos</a>
+                <a href="#localizacao" class="hover:text-gold-500 transition-colors duration-300 py-2">Contato</a>
+            </nav>
+
+            <!-- CTA Header Button -->
+            <div class="hidden lg:block">
+                <button @click="openBudgetModal()" class="gold-metallic-gradient text-dark-900 px-6 py-2.5 rounded-sm font-semibold tracking-wider text-xs uppercase hover:brightness-110 transition-all duration-300 shadow-md shadow-gold-500/10">
+                    Orçamento
+                </button>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-gold-500 focus:outline-none">
+                <i class="fa-solid fa-bars-staggered text-2xl" x-show="!mobileMenuOpen"></i>
+                <i class="fa-solid fa-xmark text-2xl" x-show="mobileMenuOpen"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div class="md:hidden bg-dark-800 border-b border-gold-500/20 px-6 py-6 space-y-4 text-xs font-semibold tracking-widest uppercase"
+             x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-5" x-transition:enter-end="opacity-100 translate-y-0">
+            <a href="#sobre" @click="mobileMenuOpen = false" class="block py-2 text-gray-300 hover:text-gold-500">Sobre</a>
+            <a href="#servicos" @click="mobileMenuOpen = false" class="block py-2 text-gray-300 hover:text-gold-500">Serviços</a>
+            <a href="#diferenciais" @click="mobileMenuOpen = false" class="block py-2 text-gray-300 hover:text-gold-500">Diferenciais</a>
+            <a href="#antes-depois" @click="mobileMenuOpen = false" class="block py-2 text-gray-300 hover:text-gold-500">Antes & Depois</a>
+            <a href="#depoimentos" @click="mobileMenuOpen = false" class="block py-2 text-gray-300 hover:text-gold-500">Depoimentos</a>
+            <a href="#localizacao" @click="mobileMenuOpen = false" class="block py-2 text-gray-300 hover:text-gold-500">Contato</a>
+            <button @click="mobileMenuOpen = false; openBudgetModal()" class="w-full gold-metallic-gradient text-dark-900 py-3 rounded-sm font-bold tracking-wider text-center uppercase">
+                Solicitar Orçamento
+            </button>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative h-screen min-h-[650px] flex items-center justify-center overflow-hidden bg-dark-900">
+        <!-- Background Cinematic Image of a Luxury Vehicle with Overlay -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=1920" 
+                 alt="Carro Esportivo Premium Preto" 
+                 class="w-full h-full object-cover opacity-35 filter brightness-[0.4] contrast-[1.1] animate-zoom">
+            <!-- Gradients to blend -->
+            <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-dark-900/60"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-dark-900 via-dark-900/40 to-transparent"></div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="relative z-10 max-w-7xl mx-auto px-6 w-full text-left pt-20">
+            <div class="max-w-3xl">
+                <!-- Golden Tag -->
+                <div class="inline-flex items-center space-x-2 border border-gold-500/30 bg-gold-500/5 px-4 py-1.5 rounded-full mb-6 backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-gold-500 animate-pulse"></span>
+                    <span class="text-[10px] md:text-xs font-semibold tracking-[0.25em] uppercase text-gold-200">Araguaína - TO</span>
+                </div>
+
+                <!-- Main Name / Slogan -->
+                <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-black tracking-wider text-white mb-4">
+                    MOURA
+                </h1>
+                <h2 class="font-serif text-2xl md:text-4xl lg:text-5xl font-light text-gold-500 italic mb-6 tracking-wide">
+                    "Para quem é exigente com carro."
+                </h2>
+
+                <!-- Complementary copy -->
+                <p class="text-sm md:text-base lg:text-lg text-gray-300 font-light leading-relaxed mb-10 max-w-2xl border-l-2 border-gold-500/40 pl-4">
+                    Excelência em martelinho de ouro, proteção e estética automotiva para veículos que merecem o mais alto nível de cuidado. Preservamos o valor de revenda e realçamos o brilho único de cada detalhe.
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <!-- WhatsApp Primary Action -->
+                    <button @click="openBudgetModal()" class="gold-metallic-gradient text-dark-900 font-bold tracking-wider text-xs md:text-sm uppercase px-8 py-4 rounded-sm hover:brightness-110 transition-all duration-300 shadow-xl shadow-gold-500/20 flex items-center justify-center gap-3 group">
+                        <i class="fa-brands fa-whatsapp text-lg group-hover:scale-110 transition-transform"></i>
+                        Solicitar Orçamento
+                    </button>
+                    <!-- Services Secondary Action -->
+                    <a href="#servicos" class="border border-gold-500/30 bg-dark-900/60 backdrop-blur-md text-white font-semibold tracking-wider text-xs md:text-sm uppercase px-8 py-4 rounded-sm hover:border-gold-500 hover:text-gold-500 transition-all duration-300 flex items-center justify-center gap-2">
+                        Ver Serviços
+                        <i class="fa-solid fa-arrow-down-long ml-1 text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center">
+            <span class="text-[9px] tracking-[0.3em] uppercase text-gray-400 mb-2 font-medium">Scroll para explorar</span>
+            <div class="w-[1px] h-12 bg-gradient-to-b from-gold-500/80 to-transparent relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1/2 bg-white animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION (SOBRE) -->
+    <section id="sobre" class="py-24 relative overflow-hidden bg-dark-900 border-t border-gold-500/5">
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                
+                <!-- Left Side: Cinematic detailing image + overlay cards -->
+                <div class="lg:col-span-5 relative">
+                    <div class="relative rounded-sm overflow-hidden border border-gold-500/20 p-2 bg-dark-800">
+                        <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&q=80&w=800" 
+                             alt="Detalhamento Automotivo Moura" 
+                             class="w-full h-full object-cover filter brightness-75 rounded-sm">
+                        <!-- Decorative golden frame -->
+                        <div class="absolute inset-4 border border-gold-500/10 pointer-events-none"></div>
+                    </div>
+                    
+                    <!-- Floating high-end statistics -->
+                    <div class="absolute -bottom-6 -right-6 bg-dark-800/95 border border-gold-500/30 p-5 rounded-sm gold-glow max-w-[200px] backdrop-blur-md">
+                        <span class="font-serif text-3xl font-bold text-gold-500 block mb-1">TOPO</span>
+                        <p class="text-[10px] uppercase tracking-widest text-gray-400 font-semibold leading-tight">Estética de Alto Padrão em Araguaína</p>
+                    </div>
+                </div>
+
+                <!-- Right Side: Text & Brand philosophy -->
+                <div class="lg:col-span-7">
+                    <span class="text-gold-500 text-xs font-semibold tracking-[0.3em] uppercase block mb-3">Referência em Araguaína</span>
+                    <h2 class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-white leading-tight">
+                        Compromisso absoluto com a <br>
+                        <span class="gold-text-gradient">perfeição automotiva</span>
+                    </h2>
+                    
+                    <p class="text-gray-300 font-light leading-relaxed mb-6">
+                        A Moura nasceu para atender proprietários que buscam mais do que simples serviços automotivos. Oferecemos soluções premium para preservação, proteção e valorização do seu veículo, utilizando técnicas modernas, equipamentos profissionais e acabamento impecável.
+                    </p>
+
+                    <p class="text-gray-400 font-light leading-relaxed mb-8">
+                        Cada carro que entra em nosso estúdio recebe tratamento sob medida. De superesportivos a caminhonetes premium comuns em nossa região, dominamos a ciência do reflexo perfeito e a arte da restauração sem pintura original (Martelinho de Ouro).
+                    </p>
+
+                    <!-- Key highlights -->
+                    <div class="grid grid-cols-2 gap-6 pt-6 border-t border-gold-500/10">
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-medal text-gold-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-sm tracking-wide text-white">Equipamentos Líderes</h4>
+                                <p class="text-xs text-gray-400 font-light mt-1">A mais recente tecnologia em polimento e reparos milimétricos.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i class="fa-solid fa-shield-halved text-gold-500 text-xl mt-1"></i>
+                            <div>
+                                <h4 class="font-bold text-sm tracking-wide text-white">Proteção Extrema</h4>
+                                <p class="text-xs text-gray-400 font-light mt-1">Produtos importados homologados mundialmente.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICES SECTION (SERVIÇOS) -->
+    <section id="servicos" class="py-24 bg-dark-800 relative border-t border-b border-gold-500/5">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-gold-500 text-xs font-semibold tracking-[0.3em] uppercase block mb-3">Nossas Especialidades</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mb-4">Serviços Exclusivos</h2>
+                <div class="w-20 h-[2px] bg-gold-500 mx-auto"></div>
+                <p class="text-gray-400 font-light text-sm md:text-base mt-4">
+                    Soluções de detalhamento e restauração meticulosamente planejadas para superar todas as expectativas.
+                </p>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1: Martelinho de Ouro -->
+                <div class="bg-dark-900 border border-gold-500/10 p-8 rounded-sm transition-all duration-300 hover:border-gold-500/60 gold-glow-hover flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-full border border-gold-500/30 flex items-center justify-center mb-6 bg-gold-500/5 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all duration-500">
+                            <i class="fa-solid fa-gavel text-gold-500 group-hover:text-dark-900 text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-3 group-hover:text-gold-500 transition-colors">Martelinho de Ouro</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Restauração de amassados mantendo a pintura 100% original de fábrica. Técnica artesanal de altíssima precisão.
+                        </p>
+                    </div>
+                    <button @click="openBudgetModal('Martelinho de Ouro')" class="text-gold-500 hover:text-white text-[10px] tracking-widest font-bold uppercase mt-8 flex items-center gap-2 self-start transition-colors">
+                        Saber mais <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+
+                <!-- Card 2: Estética Automotiva -->
+                <div class="bg-dark-900 border border-gold-500/10 p-8 rounded-sm transition-all duration-300 hover:border-gold-500/60 gold-glow-hover flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-full border border-gold-500/30 flex items-center justify-center mb-6 bg-gold-500/5 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all duration-500">
+                            <i class="fa-solid fa-wand-magic-sparkles text-gold-500 group-hover:text-dark-900 text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-3 group-hover:text-gold-500 transition-colors">Estética Automotiva</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Limpeza técnica e restauração profunda de cada componente, utilizando pincéis delicados e extratoras profissionais.
+                        </p>
+                    </div>
+                    <button @click="openBudgetModal('Estética Automotiva')" class="text-gold-500 hover:text-white text-[10px] tracking-widest font-bold uppercase mt-8 flex items-center gap-2 self-start transition-colors">
+                        Saber mais <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+
+                <!-- Card 3: PPF (Paint Protection Film) -->
+                <div class="bg-dark-900 border border-gold-500/10 p-8 rounded-sm transition-all duration-300 hover:border-gold-500/60 gold-glow-hover flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-full border border-gold-500/30 flex items-center justify-center mb-6 bg-gold-500/5 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all duration-500">
+                            <i class="fa-solid fa-shield-halved text-gold-500 group-hover:text-dark-900 text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-3 group-hover:text-gold-500 transition-colors">PPF (Paint Protection)</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Aplicação de película de poliuretano auto-regenerativa contra impactos de pedras, arranhões e raios UV.
+                        </p>
+                    </div>
+                    <button @click="openBudgetModal('PPF (Paint Protection Film)')" class="text-gold-500 hover:text-white text-[10px] tracking-widest font-bold uppercase mt-8 flex items-center gap-2 self-start transition-colors">
+                        Saber mais <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+
+                <!-- Card 4: Vitrificação -->
+                <div class="bg-dark-900 border border-gold-500/10 p-8 rounded-sm transition-all duration-300 hover:border-gold-500/60 gold-glow-hover flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-full border border-gold-500/30 flex items-center justify-center mb-6 bg-gold-500/5 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all duration-500">
+                            <i class="fa-solid fa-gem text-gold-500 group-hover:text-dark-900 text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-3 group-hover:text-gold-500 transition-colors">Vitrificação</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Proteção cerâmica com nano-tecnologia 9H de alta durabilidade, deixando o veículo com toque aveludado e brilho espelhado.
+                        </p>
+                    </div>
+                    <button @click="openBudgetModal('Vitrificação')" class="text-gold-500 hover:text-white text-[10px] tracking-widest font-bold uppercase mt-8 flex items-center gap-2 self-start transition-colors">
+                        Saber mais <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+
+                <!-- Card 5: Polimento Técnico -->
+                <div class="bg-dark-900 border border-gold-500/10 p-8 rounded-sm transition-all duration-300 hover:border-gold-500/60 gold-glow-hover flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-full border border-gold-500/30 flex items-center justify-center mb-6 bg-gold-500/5 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all duration-500">
+                            <i class="fa-solid fa-sync text-gold-500 group-hover:text-dark-900 text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-3 group-hover:text-gold-500 transition-colors">Polimento Técnico</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Correção avançada da pintura com remoção cirúrgica de microrriscos, teias de aranha e imperfeições.
+                        </p>
+                    </div>
+                    <button @click="openBudgetModal('Polimento Técnico')" class="text-gold-500 hover:text-white text-[10px] tracking-widest font-bold uppercase mt-8 flex items-center gap-2 self-start transition-colors">
+                        Saber mais <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+
+                <!-- Card 6: Higienização Interna -->
+                <div class="bg-dark-900 border border-gold-500/10 p-8 rounded-sm transition-all duration-300 hover:border-gold-500/60 gold-glow-hover flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-full border border-gold-500/30 flex items-center justify-center mb-6 bg-gold-500/5 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all duration-500">
+                            <i class="fa-solid fa-soap text-gold-500 group-hover:text-dark-900 text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-3 group-hover:text-gold-500 transition-colors">Higienização Interna</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Limpeza completa de bancos de couro ou tecido, teto, carpetes e painéis com desinfecção profunda e hidratação do couro.
+                        </p>
+                    </div>
+                    <button @click="openBudgetModal('Higienização Interna')" class="text-gold-500 hover:text-white text-[10px] tracking-widest font-bold uppercase mt-8 flex items-center gap-2 self-start transition-colors">
+                        Saber mais <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+
+                <!-- Card 7: Revitalização de Pintura -->
+                <div class="bg-dark-900 border border-gold-500/10 p-8 rounded-sm transition-all duration-300 hover:border-gold-500/60 gold-glow-hover flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-full border border-gold-500/30 flex items-center justify-center mb-6 bg-gold-500/5 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all duration-500">
+                            <i class="fa-solid fa-spray-can text-gold-500 group-hover:text-dark-900 text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-3 group-hover:text-gold-500 transition-colors">Revitalização de Pintura</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Processo de condicionamento físico-químico da pintura, devolvendo o brilho e a profundidade de cor de carros opacos.
+                        </p>
+                    </div>
+                    <button @click="openBudgetModal('Revitalização de Pintura')" class="text-gold-500 hover:text-white text-[10px] tracking-widest font-bold uppercase mt-8 flex items-center gap-2 self-start transition-colors">
+                        Saber mais <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+
+                <!-- Card 8: Proteção de Rodas & Vidros -->
+                <div class="bg-dark-900 border border-gold-500/10 p-8 rounded-sm transition-all duration-300 hover:border-gold-500/60 gold-glow-hover flex flex-col justify-between group">
+                    <div>
+                        <div class="w-14 h-14 rounded-full border border-gold-500/30 flex items-center justify-center mb-6 bg-gold-500/5 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all duration-500">
+                            <i class="fa-solid fa-circle-notch text-gold-500 group-hover:text-dark-900 text-xl"></i>
+                        </div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-3 group-hover:text-gold-500 transition-colors">Proteção de Rodas & Vidros</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Vitrificação de rodas para repelir poeira de pastilhas de freio e cristalização de vidros para excelente visibilidade na chuva.
+                        </p>
+                    </div>
+                    <button @click="openBudgetModal('Proteção de Rodas e Vidros')" class="text-gold-500 hover:text-white text-[10px] tracking-widest font-bold uppercase mt-8 flex items-center gap-2 self-start transition-colors">
+                        Saber mais <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Custom CTA to get customized price -->
+            <div class="mt-16 bg-dark-900 border border-gold-500/20 p-8 rounded-sm max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 gold-glow">
+                <div class="text-left">
+                    <h4 class="font-serif text-xl font-bold text-white">Não sabe qual serviço seu veículo necessita?</h4>
+                    <p class="text-xs text-gray-400 mt-1">Nossos especialistas fazem uma análise gratuita e personalizada da pintura e interior do seu carro.</p>
+                </div>
+                <button @click="openBudgetModal('Avaliação Técnica')" class="w-full md:w-auto text-xs font-semibold uppercase tracking-wider bg-gold-500 text-dark-900 px-6 py-3.5 rounded-sm hover:bg-gold-400 transition-colors whitespace-nowrap">
+                    Solicitar Diagnóstico Grátis
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- BEFORE AND AFTER SECTION (SLIDER INTERATIVO COM RETRATOS E BOTÕES PREMIUM) -->
+    <section id="antes-depois" class="py-24 bg-dark-900 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-gold-500 text-xs font-semibold tracking-[0.3em] uppercase block mb-3">Galeria de Resultados</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mb-4">Galeria Antes & Depois</h2>
+                <div class="w-20 h-[2px] bg-gold-500 mx-auto mb-6"></div>
+                <p class="text-gray-400 font-light text-sm">
+                    Arraste o slider central de cada categoria para verificar o resultado milimétrico e impecável de nossas restaurações.
+                </p>
+
+                <!-- Category Selector with Luxury Golden Gradient Buttons -->
+                <div class="flex flex-wrap justify-center gap-3 md:gap-4 mt-8">
+                    <button @click="activeSlider = 'martelinho'" 
+                            :class="activeSlider === 'martelinho' ? 'gold-metallic-gradient text-dark-900 font-bold shadow-lg shadow-gold-500/25 scale-105' : 'bg-dark-800 text-gray-300 border border-gold-500/20 hover:border-gold-500/50 hover:text-white'" 
+                            class="px-6 py-3 rounded-sm text-xs uppercase tracking-wider font-semibold transition-all duration-300">
+                        Martelinho de Ouro
+                    </button>
+                    <button @click="activeSlider = 'polimento'" 
+                            :class="activeSlider === 'polimento' ? 'gold-metallic-gradient text-dark-900 font-bold shadow-lg shadow-gold-500/25 scale-105' : 'bg-dark-800 text-gray-300 border border-gold-500/20 hover:border-gold-500/50 hover:text-white'" 
+                            class="px-6 py-3 rounded-sm text-xs uppercase tracking-wider font-semibold transition-all duration-300">
+                        Polimento Técnico
+                    </button>
+                    <button @click="activeSlider = 'vitrificacao'" 
+                            :class="activeSlider === 'vitrificacao' ? 'gold-metallic-gradient text-dark-900 font-bold shadow-lg shadow-gold-500/25 scale-105' : 'bg-dark-800 text-gray-300 border border-gold-500/20 hover:border-gold-500/50 hover:text-white'" 
+                            class="px-6 py-3 rounded-sm text-xs uppercase tracking-wider font-semibold transition-all duration-300">
+                        Vitrificação
+                    </button>
+                    <button @click="activeSlider = 'estetica'" 
+                            :class="activeSlider === 'estetica' ? 'gold-metallic-gradient text-dark-900 font-bold shadow-lg shadow-gold-500/25 scale-105' : 'bg-dark-800 text-gray-300 border border-gold-500/20 hover:border-gold-500/50 hover:text-white'" 
+                            class="px-6 py-3 rounded-sm text-xs uppercase tracking-wider font-semibold transition-all duration-300">
+                        Estética Interna
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interactive Slider Box -->
+            <div class="max-w-4xl mx-auto bg-dark-800 p-3 rounded-sm border border-gold-500/10 gold-glow">
+                
+                <!-- Martelinho Slider -->
+                <div x-show="activeSlider === 'martelinho'" class="relative aspect-video w-full overflow-hidden select-none" id="slider-martelinho">
+                    <!-- Before Image -->
+                    <img src="https://images.unsplash.com/photo-1507136566006-cfc505b114fc?auto=format&fit=crop&q=80&w=1200" alt="Amassado Carro Antes" class="absolute inset-0 w-full h-full object-cover pointer-events-none filter brightness-50 contrast-125">
+                    <!-- After Image Container (revealed via width) -->
+                    <div class="absolute inset-y-0 left-0 overflow-hidden" :style="'width: ' + sliderPos + '%'">
+                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=1200" alt="Martelinho Finalizado" class="absolute inset-0 w-[850px] md:w-[880px] lg:w-[890px] max-w-none h-full object-cover pointer-events-none">
+                    </div>
+                    <div class="absolute inset-y-0 text-white font-bold flex items-center justify-between px-6 pointer-events-none w-full text-xs tracking-widest uppercase">
+                        <span class="bg-dark-900/80 px-3 py-1.5 rounded-sm backdrop-blur-md">Antes</span>
+                        <span class="bg-gold-500 text-dark-900 px-3 py-1.5 rounded-sm">Depois</span>
+                    </div>
+                    <!-- Slider Handle -->
+                    <div class="absolute inset-y-0 -ml-3 w-6 flex items-center justify-center cursor-ew-resize z-20 group" :style="'left: ' + sliderPos + '%'">
+                        <div class="w-[2px] h-full bg-gold-500 group-hover:bg-white transition-colors"></div>
+                        <div class="absolute w-8 h-8 rounded-full bg-gold-500 text-dark-900 border border-white flex items-center justify-center shadow-lg transform transition-transform group-active:scale-95">
+                            <i class="fa-solid fa-arrows-left-right text-xs"></i>
+                        </div>
+                    </div>
+                    <!-- Click/Touch area mask -->
+                    <div class="absolute inset-0 z-10 cursor-ew-resize opacity-0" @mousedown="startSliding" @mousemove="slideMove" @mouseup="stopSliding" @mouseleave="stopSliding" @touchstart="startSliding" @touchmove="slideMove" @touchend="stopSliding"></div>
+                </div>
+
+                <!-- Polimento Slider -->
+                <div x-show="activeSlider === 'polimento'" class="relative aspect-video w-full overflow-hidden select-none" id="slider-polimento">
+                    <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=1200" alt="Pintura com Micro-riscos" class="absolute inset-0 w-full h-full object-cover pointer-events-none filter saturate-50 contrast-75">
+                    <div class="absolute inset-y-0 left-0 overflow-hidden" :style="'width: ' + sliderPos + '%'">
+                        <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=1200" alt="Pintura Polida Espelhada" class="absolute inset-0 w-[850px] md:w-[880px] lg:w-[890px] max-w-none h-full object-cover pointer-events-none filter contrast-125 brightness-110">
+                    </div>
+                    <div class="absolute inset-y-0 text-white font-bold flex items-center justify-between px-6 pointer-events-none w-full text-xs tracking-widest uppercase">
+                        <span class="bg-dark-900/80 px-3 py-1.5 rounded-sm backdrop-blur-md">Antes</span>
+                        <span class="bg-gold-500 text-dark-900 px-3 py-1.5 rounded-sm">Depois</span>
+                    </div>
+                    <div class="absolute inset-y-0 -ml-3 w-6 flex items-center justify-center cursor-ew-resize z-20 group" :style="'left: ' + sliderPos + '%'">
+                        <div class="w-[2px] h-full bg-gold-500 group-hover:bg-white transition-colors"></div>
+                        <div class="absolute w-8 h-8 rounded-full bg-gold-500 text-dark-900 border border-white flex items-center justify-center shadow-lg transform transition-transform group-active:scale-95">
+                            <i class="fa-solid fa-arrows-left-right text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 z-10 cursor-ew-resize opacity-0" @mousedown="startSliding" @mousemove="slideMove" @mouseup="stopSliding" @mouseleave="stopSliding" @touchstart="startSliding" @touchmove="slideMove" @touchend="stopSliding"></div>
+                </div>
+
+                <!-- Vitrificacao Slider -->
+                <div x-show="activeSlider === 'vitrificacao'" class="relative aspect-video w-full overflow-hidden select-none" id="slider-vitrificacao">
+                    <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=1200" alt="Carro molhado fosco" class="absolute inset-0 w-full h-full object-cover pointer-events-none filter saturate-50 opacity-80">
+                    <div class="absolute inset-y-0 left-0 overflow-hidden" :style="'width: ' + sliderPos + '%'">
+                        <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=1200" alt="Proteção cerâmica brilho extremo" class="absolute inset-0 w-[850px] md:w-[880px] lg:w-[890px] max-w-none h-full object-cover pointer-events-none filter contrast-125 brightness-110">
+                    </div>
+                    <div class="absolute inset-y-0 text-white font-bold flex items-center justify-between px-6 pointer-events-none w-full text-xs tracking-widest uppercase">
+                        <span class="bg-dark-900/80 px-3 py-1.5 rounded-sm backdrop-blur-md">Antes</span>
+                        <span class="bg-gold-500 text-dark-900 px-3 py-1.5 rounded-sm">Depois</span>
+                    </div>
+                    <div class="absolute inset-y-0 -ml-3 w-6 flex items-center justify-center cursor-ew-resize z-20 group" :style="'left: ' + sliderPos + '%'">
+                        <div class="w-[2px] h-full bg-gold-500 group-hover:bg-white transition-colors"></div>
+                        <div class="absolute w-8 h-8 rounded-full bg-gold-500 text-dark-900 border border-white flex items-center justify-center shadow-lg transform transition-transform group-active:scale-95">
+                            <i class="fa-solid fa-arrows-left-right text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 z-10 cursor-ew-resize opacity-0" @mousedown="startSliding" @mousemove="slideMove" @mouseup="stopSliding" @mouseleave="stopSliding" @touchstart="startSliding" @touchmove="slideMove" @touchend="stopSliding"></div>
+                </div>
+
+                <!-- Estética Interna Slider -->
+                <div x-show="activeSlider === 'estetica'" class="relative aspect-video w-full overflow-hidden select-none" id="slider-estetica">
+                    <img src="https://images.unsplash.com/photo-1617886322168-72b886573c3c?auto=format&fit=crop&q=80&w=1200" alt="Couro Sujo" class="absolute inset-0 w-full h-full object-cover pointer-events-none filter brightness-50 contrast-75">
+                    <div class="absolute inset-y-0 left-0 overflow-hidden" :style="'width: ' + sliderPos + '%'">
+                        <img src="https://images.unsplash.com/photo-1617886322168-72b886573c3c?auto=format&fit=crop&q=80&w=1200" alt="Couro Limpo Restaurado" class="absolute inset-0 w-[850px] md:w-[880px] lg:w-[890px] max-w-none h-full object-cover pointer-events-none filter contrast-125 brightness-110">
+                    </div>
+                    <div class="absolute inset-y-0 text-white font-bold flex items-center justify-between px-6 pointer-events-none w-full text-xs tracking-widest uppercase">
+                        <span class="bg-dark-900/80 px-3 py-1.5 rounded-sm backdrop-blur-md">Antes</span>
+                        <span class="bg-gold-500 text-dark-900 px-3 py-1.5 rounded-sm">Depois</span>
+                    </div>
+                    <div class="absolute inset-y-0 -ml-3 w-6 flex items-center justify-center cursor-ew-resize z-20 group" :style="'left: ' + sliderPos + '%'">
+                        <div class="w-[2px] h-full bg-gold-500 group-hover:bg-white transition-colors"></div>
+                        <div class="absolute w-8 h-8 rounded-full bg-gold-500 text-dark-900 border border-white flex items-center justify-center shadow-lg transform transition-transform group-active:scale-95">
+                            <i class="fa-solid fa-arrows-left-right text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="absolute inset-0 z-10 cursor-ew-resize opacity-0" @mousedown="startSliding" @mousemove="slideMove" @mouseup="stopSliding" @mouseleave="stopSliding" @touchstart="startSliding" @touchmove="slideMove" @touchend="stopSliding"></div>
+                </div>
+
+            </div>
+
+            <!-- Hint text -->
+            <div class="text-center mt-6">
+                <p class="text-xs text-gold-500/80 italic font-medium">
+                    <i class="fa-solid fa-hand-pointer animate-bounce mr-2"></i> Toque e arraste para os lados para comparar os detalhes.
+                </p>
+            </div>
+
+            <!-- EXAMPLES PORTRAITS GALLERY (GALERIA DE RETRATOS DE EXEMPLO DENTRO DA ABA SELECIONADA) -->
+            <div class="mt-16">
+                <h3 class="font-serif text-lg md:text-xl font-bold text-center text-white mb-8 tracking-widest">
+                    <span class="text-gold-500">MOURA SHOWCASE:</span> Outros Trabalhos Concluídos
+                </h3>
+                
+                <!-- Martelinho Portraits -->
+                <div x-show="activeSlider === 'martelinho'" class="grid grid-cols-1 sm:grid-cols-3 gap-6" x-transition>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1617469767053-d3b523a0b982?auto=format&fit=crop&q=80&w=600" alt="Retrato Martelinho Ferrari" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Ferrari F8 Tributo</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Remoção de Amassado no Capô</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Recuperação milimétrica sem retoque de tinta de fábrica.</p>
+                    </div>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?auto=format&fit=crop&q=80&w=600" alt="Retrato Martelinho Mercedes" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Mercedes C63 AMG</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Restauração de Lateral Traseira</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Remoção de vinco acentuado preservando a pintura.</p>
+                    </div>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&q=80&w=600" alt="Retrato Martelinho Dodge" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Dodge Challenger</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Correção de Teto pós-Granizo</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Alinhamento impecável com ferramentas especiais de tração.</p>
+                    </div>
+                </div>
+
+                <!-- Polimento Portraits -->
+                <div x-show="activeSlider === 'polimento'" class="grid grid-cols-1 sm:grid-cols-3 gap-6" x-transition>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1525609004556-c46c7d6cf0a3?auto=format&fit=crop&q=80&w=600" alt="Retrato Polimento Porsche" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Porsche 911 Carrera</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Polimento Corretivo Completo</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Eliminação total de micro-riscos e hologramas da pintura.</p>
+                    </div>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=600" alt="Retrato Polimento Audi" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Audi R8 V10</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Polimento de Alto Brilho</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Reflexo cristalino com refino e lustro profissional RUPES.</p>
+                    </div>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&q=80&w=600" alt="Retrato Polimento Cayman" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Porsche Cayman GT4</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Descontaminação & Polimento</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Preparação extrema da pintura removendo oxidações de poluição.</p>
+                    </div>
+                </div>
+
+                <!-- Vitrificacao Portraits -->
+                <div x-show="activeSlider === 'vitrificacao'" class="grid grid-cols-1 sm:grid-cols-3 gap-6" x-transition>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1611245801163-66f3414079c1?auto=format&fit=crop&q=80&w=600" alt="Retrato Vitrificacao Mercedes" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Mercedes Classe G AMG</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Vitrificação Cerâmica 9H</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Camada de vidro de quartzo de alta resistência e hidrofobia total.</p>
+                    </div>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1617531653332-bd46c24f2068?auto=format&fit=crop&q=80&w=600" alt="Retrato Vitrificacao Corvette" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Corvette C8 Stingray</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Brilho Efeito Molhado</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Selagem cerâmica premium com profundidade de cor extraordinária.</p>
+                    </div>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&q=80&w=600" alt="Retrato Vitrificacao Bentley" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Bentley Continental</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Proteção de Pintura Gyeon</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Vitrificação certificada com resistência química de até 3 anos.</p>
+                    </div>
+                </div>
+
+                <!-- Estetica Portraits -->
+                <div x-show="activeSlider === 'estetica'" class="grid grid-cols-1 sm:grid-cols-3 gap-6" x-transition>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&q=80&w=600" alt="Retrato Interior Lamborghini" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Lamborghini Huracán</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Higienização de Detalhes</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Tratamento minucioso de alcântara, costuras e ecrãs digitais.</p>
+                    </div>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&q=80&w=600" alt="Retrato Interior Aston Martin" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Aston Martin Vantage</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Hidratação de Couro Nobre</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Proteção contra ressecamento e rachaduras por raios solares.</p>
+                    </div>
+                    <div class="bg-dark-800 border border-gold-500/10 p-2 rounded-sm hover:border-gold-500/30 transition-all duration-300 group">
+                        <div class="aspect-[3/4] overflow-hidden rounded-sm relative mb-3">
+                            <img src="https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=600" alt="Retrato Interior Audi" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-500 filter brightness-90">
+                            <div class="absolute bottom-3 left-3 bg-dark-900/95 px-3 py-1 rounded-sm border border-gold-500/20 text-[9px] uppercase tracking-wider font-semibold text-gold-500">Audi RS6 Avant</div>
+                        </div>
+                        <h4 class="text-xs font-bold text-white uppercase tracking-wider">Desinfecção por Ozono</h4>
+                        <p class="text-[10px] text-gray-400 font-light mt-1">Oxi-sanitização eliminando odores, ácaros e bactérias do habitáculo.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- DIFFERENTIAS SECTION (DIFERENCIAIS) -->
+    <section id="diferenciais" class="py-24 bg-dark-800 relative border-t border-b border-gold-500/5">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-20">
+                <span class="text-gold-500 text-xs font-semibold tracking-[0.3em] uppercase block mb-3">Nossos Pilares</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mb-4">Por que escolher a Moura?</h2>
+                <div class="w-20 h-[2px] bg-gold-500 mx-auto"></div>
+                <p class="text-gray-400 font-light text-sm mt-4">
+                    Alinhamos perícia técnica com uma estrutura impecável para acolher seu patrimônio com a máxima segurança.
+                </p>
+            </div>
+
+            <!-- Visual grid of differentials -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                
+                <!-- Pillar 1 -->
+                <div class="flex gap-5">
+                    <div class="text-gold-500 text-3xl flex-shrink-0">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Atendimento Personalizado</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Agendamentos exclusivos com consultores especialistas para analisar detalhadamente cada veículo sem pressa ou aglomerações.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div class="flex gap-5">
+                    <div class="text-gold-500 text-3xl flex-shrink-0">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Acabamento de Alto Padrão</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Nossa obsessão está nos pequenos detalhes, de cantos de portas limpos a frisos perfeitamente polidos e sem resíduos.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="flex gap-5">
+                    <div class="text-gold-500 text-3xl flex-shrink-0">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Técnicas Modernas</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Nossa equipe está constantemente se atualizando com as melhores técnicas de detalhamento internacionais e Martelinho DSP.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 4 -->
+                <div class="flex gap-5">
+                    <div class="text-gold-500 text-3xl flex-shrink-0">
+                        <i class="fa-solid fa-flask-vial"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Produtos Importados Premium</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Trabalhamos exclusivamente com marcas consagradas globais (CarPro, Koch Chemie, Rupes) garantindo proteção máxima.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 5 -->
+                <div class="flex gap-5">
+                    <div class="text-gold-500 text-3xl flex-shrink-0">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Equipe Altamente Especializada</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Profissionais certificados apaixonados pelo universo automotivo, focados na excelência e cuidado obsessivo.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 6 -->
+                <div class="flex gap-5">
+                    <div class="text-gold-500 text-3xl flex-shrink-0">
+                        <i class="fa-solid fa-shield-cat"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-serif text-lg font-bold text-white mb-2">Garantia Real de Qualidade</h3>
+                        <p class="text-xs text-gray-400 font-light leading-relaxed">
+                            Sua satisfação integral é o nosso foco. Entregamos os resultados combinados respaldados por nossa garantia sólida.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS SECTION (DEPOIMENTOS) -->
+    <section id="depoimentos" class="py-24 bg-dark-900 relative">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-2xl mx-auto mb-20">
+                <span class="text-gold-500 text-xs font-semibold tracking-[0.3em] uppercase block mb-3">Opinião de Quem Confia</span>
+                <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mb-4">Experiências Moura</h2>
+                <div class="w-20 h-[2px] bg-gold-500 mx-auto"></div>
+                <p class="text-gray-400 font-light text-sm mt-4">
+                    Mais que clientes, cultivamos relacionamentos de confiança com apaixonados por automóveis de Araguaína.
+                </p>
+            </div>
+
+            <!-- Luxury Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Card 1 -->
+                <div class="bg-dark-800 border border-gold-500/10 p-8 rounded-sm relative gold-glow-hover transition-all duration-300">
+                    <div class="absolute -top-5 right-8 text-gold-500/10 text-7xl font-serif">“</div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150" alt="Rodrigo Ramos" class="w-14 h-14 rounded-full object-cover border border-gold-500/20">
+                        <div>
+                            <h4 class="font-bold text-sm text-white">Rodrigo Ramos</h4>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-wider">Toyota Hilux SRX</p>
+                        </div>
+                    </div>
+                    <div class="flex text-gold-500 text-xs gap-1 mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-gray-300 font-light leading-relaxed italic">
+                        "Incrível o trabalho que a equipe da Moura fez na minha Hilux. Tinha um amassado chato na porta devido a uma batida de estacionamento e eles removeram 100% com martelinho de ouro. A pintura ficou impecável!"
+                    </p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-dark-800 border border-gold-500/10 p-8 rounded-sm relative gold-glow-hover transition-all duration-300">
+                    <div class="absolute -top-5 right-8 text-gold-500/10 text-7xl font-serif">“</div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" alt="Isabela Neves" class="w-14 h-14 rounded-full object-cover border border-gold-500/20">
+                        <div>
+                            <h4 class="font-bold text-sm text-white">Isabela Neves</h4>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-wider">BMW 320i Sport</p>
+                        </div>
+                    </div>
+                    <div class="flex text-gold-500 text-xs gap-1 mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-gray-300 font-light leading-relaxed italic">
+                        "Fiz a vitrificação completa e higienização interna da minha BMW. O brilho está simplesmente surreal, a água escorre que nem mágica da lataria. Atendimento extremamente profissional do início ao fim."
+                    </p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-dark-800 border border-gold-500/10 p-8 rounded-sm relative gold-glow-hover transition-all duration-300">
+                    <div class="absolute -top-5 right-8 text-gold-500/10 text-7xl font-serif">“</div>
+                    <div class="flex items-center gap-4 mb-6">
+                        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=150" alt="Marcos Toledo" class="w-14 h-14 rounded-full object-cover border border-gold-500/20">
+                        <div>
+                            <h4 class="font-bold text-sm text-white">Marcos Toledo</h4>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-wider">Porsche Macan GTS</p>
+                        </div>
+                    </div>
+                    <div class="flex text-gold-500 text-xs gap-1 mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-gray-300 font-light leading-relaxed italic">
+                        "Exigência máxima é o meu lema e a Moura superou. Fizemos aplicação de PPF frontal e polimento corretivo. O carro parece que acabou de sair da fábrica de Stuttgart. Profissionais raros de se encontrar no Brasil."
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- LOCATION & CONTACT SECTION (LOCALIZAÇÃO) -->
+    <section id="localizacao" class="py-24 bg-dark-800 relative border-t border-b border-gold-500/5">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-stretch">
+                <!-- Location Info -->
+                <div class="lg:col-span-5 flex flex-col justify-between">
+                    <div>
+                        <span class="text-gold-500 text-xs font-semibold tracking-[0.3em] uppercase block mb-3">Atendimento Físico</span>
+                        <h2 class="font-serif text-3xl md:text-5xl font-bold text-white mb-6">Nosso Estúdio</h2>
+                        
+                        <p class="text-gray-300 font-light text-sm mb-8 leading-relaxed">
+                            Venha conhecer nosso showroom e centro técnico especializado em Araguaína - TO. Ambientes climatizados, monitorados 24h e estruturados para garantir o cuidado com seu patrimônio em total sigilo e segurança.
+                        </p>
+
+                        <!-- Contacts Detail -->
+                        <div class="space-y-6">
+                            <div class="flex items-start gap-4">
+                                <div class="text-gold-500 text-lg mt-1"><i class="fa-solid fa-location-dot"></i></div>
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-white">Endereço</h4>
+                                    <p class="text-xs text-gray-400 mt-1">Av. Filadélfia, Quadra Premium - Araguaína, Tocantins</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="text-gold-500 text-lg mt-1"><i class="fa-solid fa-phone"></i></div>
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-white">Telefone de Contato</h4>
+                                    <p class="text-xs text-gray-400 mt-1">(63) 99988-7711</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4">
+                                <div class="text-gold-500 text-lg mt-1"><i class="fa-solid fa-clock"></i></div>
+                                <div>
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-white">Horário de Funcionamento</h4>
+                                    <p class="text-xs text-gray-400 mt-1">Segunda a Sexta: 08h às 18h | Sábado: 08h às 12h</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CTA to Route Map -->
+                    <div class="mt-10 lg:mt-0 flex gap-4">
+                        <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" class="bg-transparent border border-gold-500/40 text-gold-500 hover:bg-gold-500 hover:text-dark-900 transition-all duration-300 font-bold tracking-wider text-xs uppercase px-6 py-3.5 rounded-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-route"></i> Como Chegar
+                        </a>
+                        <button @click="openBudgetModal()" class="gold-metallic-gradient text-dark-900 font-bold tracking-wider text-xs uppercase px-6 py-3.5 rounded-sm hover:brightness-110 transition-all duration-300">
+                            Falar com Consultor
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Integrated Styled Map (Container) -->
+                <div class="lg:col-span-7 h-[450px] lg:h-auto min-h-[350px] relative rounded-sm overflow-hidden border border-gold-500/20 p-1 bg-dark-900">
+                    <!-- Leaflet / Google Maps Mock Embed styled elegantly -->
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3941.050478051659!2d-48.204561!3d-7.189562!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMTEnMjIuNCJTIDQ4wrAxMicyNC40Ilc!5e0!3m2!1spt-BR!2sbr!4v1625000000000!5m2!1spt-BR!2sbr" 
+                            class="w-full h-full filter invert-[90%] hue-rotate-[180deg] opacity-80" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy"></iframe>
+                    <div class="absolute inset-0 border border-gold-500/10 pointer-events-none"></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FINAL CALL TO ACTION (CTA) -->
+    <section class="py-24 relative overflow-hidden bg-dark-900">
+        <!-- Visual Background Details -->
+        <div class="absolute inset-0 opacity-15">
+            <img src="https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&q=80&w=1920" alt="Detalhe Luzes Estética Automotiva" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-dark-900/80 to-dark-900"></div>
+
+        <div class="relative z-10 max-w-4xl mx-auto px-6 text-center">
+            <span class="text-gold-500 text-xs font-semibold tracking-[0.4em] uppercase block mb-4">Experiência Única</span>
+            <h2 class="font-serif text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
+                Seu carro merece o melhor acabamento da cidade.
+            </h2>
+            <p class="text-gray-300 font-light text-sm md:text-base mb-10 max-w-2xl mx-auto leading-relaxed">
+                Entre em contato agora e descubra por que a Moura é referência em estética automotiva premium em Araguaína. Transformamos e protegemos seu maior bem.
+            </p>
+
+            <button @click="openBudgetModal()" class="gold-metallic-gradient text-dark-900 font-bold tracking-widest text-xs md:text-sm uppercase px-12 py-5 rounded-sm hover:brightness-110 transition-all duration-300 shadow-2xl shadow-gold-500/20 inline-flex items-center gap-3 group">
+                <i class="fa-brands fa-whatsapp text-xl group-hover:scale-110 transition-transform"></i>
+                Solicitar Orçamento no WhatsApp
+            </button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-dark-900 border-t border-gold-500/10 py-16 text-gray-400">
+        <div class="max-w-7xl mx-auto px-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                
+                <!-- Col 1: Brand Info -->
+                <div class="space-y-4">
+                    <a href="#" class="flex flex-col items-start">
+                        <span class="font-serif text-2xl font-black tracking-[0.2em] text-white">MOURA</span>
+                        <span class="text-[8px] tracking-[0.45em] text-gold-500 font-semibold uppercase -mt-1">Estética Automotiva</span>
+                    </a>
+                    <p class="text-xs font-light text-gray-500 leading-relaxed pt-2">
+                        Estúdio premium dedicado ao cuidado minucioso e embelezamento automotivo de alta performance. Araguaína - Tocantins.
+                    </p>
+                </div>
+
+                <!-- Col 2: Services Quick Links -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-5">Serviços</h4>
+                    <ul class="space-y-2.5 text-xs font-light">
+                        <li><a href="#servicos" class="hover:text-gold-500 transition-colors">Martelinho de Ouro</a></li>
+                        <li><a href="#servicos" class="hover:text-gold-500 transition-colors">Polimento Técnico</a></li>
+                        <li><a href="#servicos" class="hover:text-gold-500 transition-colors">Vitrificação Cerâmica</a></li>
+                        <li><a href="#servicos" class="hover:text-gold-500 transition-colors">PPF Invisível</a></li>
+                        <li><a href="#servicos" class="hover:text-gold-500 transition-colors">Higienização de Cabines</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Navigation Quick Links -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-5">Navegação</h4>
+                    <ul class="space-y-2.5 text-xs font-light">
+                        <li><a href="#sobre" class="hover:text-gold-500 transition-colors">Sobre Nós</a></li>
+                        <li><a href="#diferenciais" class="hover:text-gold-500 transition-colors">Diferenciais</a></li>
+                        <li><a href="#antes-depois" class="hover:text-gold-500 transition-colors">Antes e Depois</a></li>
+                        <li><a href="#depoimentos" class="hover:text-gold-500 transition-colors">Depoimentos</a></li>
+                        <li><a href="#localizacao" class="hover:text-gold-500 transition-colors">Contato & Mapa</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Contacts & Socials -->
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-widest text-white mb-5">Contato</h4>
+                    <ul class="space-y-3 text-xs font-light mb-5">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-phone text-gold-500"></i> (63) 99988-7711</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-envelope text-gold-500"></i> contato@mourapremium.com</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-gold-500"></i> Araguaína - TO</li>
+                    </ul>
+                    <!-- Social icons -->
+                    <div class="flex gap-3">
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full border border-gold-500/20 flex items-center justify-center text-gray-400 hover:text-gold-500 hover:border-gold-500 transition-all"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full border border-gold-500/20 flex items-center justify-center text-gray-400 hover:text-gold-500 hover:border-gold-500 transition-all"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-full border border-gold-500/20 flex items-center justify-center text-gray-400 hover:text-gold-500 hover:border-gold-500 transition-all"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Copyright area -->
+            <div class="border-t border-gold-500/10 pt-8 flex flex-col md:flex-row justify-between items-center text-[11px] font-light text-gray-500 gap-4">
+                <p>© 2026 Moura Estética Automotiva Premium. Todos os direitos reservados.</p>
+                <p>Criado para os mais exigentes.</p>
+            </div>
+
+        </div>
+    </footer>
+
+
+    <!-- BUDGET / WHATSAPP MODAL GENERATOR (MODAL DE ORÇAMENTO PERSONALIZADO) -->
+    <div x-show="budgetModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-900/90 backdrop-blur-sm" x-transition>
+        <div class="bg-dark-800 border border-gold-500/30 w-full max-w-lg rounded-sm p-8 relative gold-glow" @click.outside="budgetModal = false">
+            
+            <!-- Close Button -->
+            <button @click="budgetModal = false" class="absolute top-4 right-4 text-gray-400 hover:text-gold-500 transition-colors">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="text-center mb-6">
+                <span class="text-gold-500 text-[10px] font-bold tracking-widest uppercase block mb-1">Consultoria Exclusiva</span>
+                <h3 class="font-serif text-2xl font-bold text-white">Solicitar Orçamento</h3>
+                <p class="text-xs text-gray-400 mt-1">Preencha rapidamente os dados e receba uma estimativa personalizada direto no seu WhatsApp.</p>
+            </div>
+
+            <!-- Form -->
+            <form @submit.prevent="generateWhatsAppLink()" class="space-y-4">
+                <!-- Name -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-1.5">Seu Nome *</label>
+                    <input type="text" x-model="formData.name" required placeholder="Ex: Rodrigo Ramos" class="w-full bg-dark-900 border border-gold-500/20 rounded-sm px-4 py-3 text-xs text-white focus:outline-none focus:border-gold-500 transition-all">
+                </div>
+
+                <!-- Car details -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-1.5">Modelo do Carro *</label>
+                        <input type="text" x-model="formData.carModel" required placeholder="Ex: Hilux, BMW 320i" class="w-full bg-dark-900 border border-gold-500/20 rounded-sm px-4 py-3 text-xs text-white focus:outline-none focus:border-gold-500 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-1.5">Ano do Veículo</label>
+                        <input type="text" x-model="formData.carYear" placeholder="Ex: 2024" class="w-full bg-dark-900 border border-gold-500/20 rounded-sm px-4 py-3 text-xs text-white focus:outline-none focus:border-gold-500 transition-all">
+                    </div>
+                </div>
+
+                <!-- Service Selector -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-1.5">Serviço Desejado</label>
+                    <select x-model="formData.service" class="w-full bg-dark-900 border border-gold-500/20 rounded-sm px-4 py-3 text-xs text-white focus:outline-none focus:border-gold-500 transition-all">
+                        <option value="Martelinho de Ouro">Martelinho de Ouro</option>
+                        <option value="Estética Automotiva">Estética Automotiva</option>
+                        <option value="PPF (Paint Protection Film)">PPF (Paint Protection Film)</option>
+                        <option value="Vitrificação">Vitrificação</option>
+                        <option value="Polimento Técnico">Polimento Técnico</option>
+                        <option value="Higienização Interna">Higienização Interna</option>
+                        <option value="Revitalização de Pintura">Revitalização de Pintura</option>
+                        <option value="Proteção de Rodas e Vidros">Proteção de Rodas e Vidros</option>
+                        <option value="Avaliação Técnica Completa">Preciso de um Diagnóstico Completo</option>
+                    </select>
+                </div>
+
+                <!-- Additional comments -->
+                <div>
+                    <label class="block text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-1.5">Detalhes Adicionais (Opcional)</label>
+                    <textarea x-model="formData.notes" rows="2" placeholder="Ex: Possui risco na porta esquerda..." class="w-full bg-dark-900 border border-gold-500/20 rounded-sm px-4 py-3 text-xs text-white focus:outline-none focus:border-gold-500 transition-all resize-none"></textarea>
+                </div>
+
+                <!-- Action Button -->
+                <button type="submit" class="w-full gold-metallic-gradient text-dark-900 font-bold uppercase tracking-wider text-xs py-4 rounded-sm hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> Enviar Informações
+                </button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
