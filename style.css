@@ -1,0 +1,41 @@
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+    background: #D4AF37;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #b48c26;
+}
+/* Glow gold effects */
+.gold-glow {
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+}
+.gold-glow-hover:hover {
+    box-shadow: 0 0 35px rgba(212, 175, 55, 0.3);
+    border-color: #D4AF37;
+}
+/* Text gradient for luxury titles */
+.gold-text-gradient {
+    background: linear-gradient(135deg, #FFF 30%, #D4AF37 70%, #F5E093 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.gold-metallic-gradient {
+    background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
+}
+/* Custom animations */
+@keyframes subtleZoom {
+    0% { transform: scale(1.0); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1.0); }
+}
+.animate-zoom {
+    animation: subtleZoom 25s infinite ease-in-out;
+}

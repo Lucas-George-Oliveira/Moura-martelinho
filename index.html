@@ -6,176 +6,19 @@
     <title>Moura | Martelinho de Ouro & Estética Automotiva Premium</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            50: '#fefdf0',
-                            100: '#fcf6be',
-                            200: '#f8ee88',
-                            300: '#f1df4f',
-                            400: '#e5ca24',
-                            500: '#d4af37', // Dourado Metálico Principal
-                            600: '#b48c26',
-                            700: '#8e661c',
-                            800: '#6f4e1a',
-                            900: '#5c3f19',
-                            950: '#35210b',
-                        },
-                        dark: {
-                            900: '#0A0A0A', // Preto profundo
-                            800: '#121212', // Cinza muito escuro
-                            700: '#1A1A1A', // Cinza intermediário
-                            600: '#262626',
-                        }
-                    },
-                    fontFamily: {
-                        serif: ['Cinzel', 'Playfair Display', 'serif'],
-                        sans: ['Montserrat', 'Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="tailwind-config.js"></script>
     <!-- Google Fonts: Cinzel & Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome (Ícones de Luxo) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link rel="stylesheet" href="style.css">
     <!-- JS & ALPINE LOGIC DEFINED BEFORE ALPINE INITIALIZATION -->
-    <script>
-        function landingApp() {
-            return {
-                scrolled: false,
-                mobileMenuOpen: false,
-                activeSlider: 'martelinho',
-                sliderPos: 50,
-                isSliding: false,
-                budgetModal: false,
-                formData: {
-                    name: '',
-                    carModel: '',
-                    carYear: '',
-                    service: 'Martelinho de Ouro',
-                    notes: ''
-                },
-
-                init() {
-                    // Track header scroll state
-                    window.addEventListener('scroll', () => {
-                        this.scrolled = window.scrollY > 50;
-                    });
-                },
-
-                // Open Modal with Predefined Service
-                openBudgetModal(preselectedService = null) {
-                    if (preselectedService) {
-                        this.formData.service = preselectedService;
-                    }
-                    this.budgetModal = true;
-                },
-
-                // Before and After drag mechanics
-                startSliding(e) {
-                    this.isSliding = true;
-                    this.updateSliderPos(e);
-                },
-                slideMove(e) {
-                    if (!this.isSliding) return;
-                    this.updateSliderPos(e);
-                },
-                stopSliding() {
-                    this.isSliding = false;
-                },
-                updateSliderPos(e) {
-                    // Handle responsive mouse coordinates vs touch events
-                    let container;
-                    if (this.activeSlider === 'martelinho') container = document.getElementById('slider-martelinho');
-                    else if (this.activeSlider === 'polimento') container = document.getElementById('slider-polimento');
-                    else if (this.activeSlider === 'vitrificacao') container = document.getElementById('slider-vitrificacao');
-                    else if (this.activeSlider === 'estetica') container = document.getElementById('slider-estetica');
-                    
-                    if (!container) return;
-
-                    const rect = container.getBoundingClientRect();
-                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                    const offsetX = clientX - rect.left;
-                    let percentage = (offsetX / rect.width) * 100;
-
-                    if (percentage < 0) percentage = 0;
-                    if (percentage > 100) percentage = 100;
-
-                    this.sliderPos = percentage.toFixed(2);
-                },
-
-                // Generate Custom Whatsapp URL and Redirect
-                generateWhatsAppLink() {
-                    const phoneNumber = '5563999887711'; // Moura WhatsApp Number Placeholder
-                    const greeting = `Olá, Moura Estética Automotiva! Gostaria de um orçamento premium para meu veículo.`;
-                    
-                    const details = `\n\n*DADOS DO PEDIDO:*\n• *Nome:* ${this.formData.name}\n• *Veículo:* ${this.formData.carModel} ${this.formData.carYear ? `(${this.formData.carYear})` : ''}\n• *Serviço:* ${this.formData.service}${this.formData.notes ? `\n• *Anotações:* ${this.formData.notes}` : ''}`;
-                    
-                    const encodedText = encodeURIComponent(greeting + details);
-                    const finalUrl = `https://wa.me/${phoneNumber}?text=${encodedText}`;
-
-                    // Redirect user
-                    window.open(finalUrl, '_blank');
-                    this.budgetModal = false;
-                }
-            }
-        }
-    </script>
-
+    <script src="script.js"></script>
     <!-- Alpine.js com defer para inicialização segura pós-DOM e função declarada -->
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
-    <style>
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0A0A0A;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #D4AF37;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #b48c26;
-        }
-        /* Glow gold effects */
-        .gold-glow {
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
-        }
-        .gold-glow-hover:hover {
-            box-shadow: 0 0 35px rgba(212, 175, 55, 0.3);
-            border-color: #D4AF37;
-        }
-        /* Text gradient for luxury titles */
-        .gold-text-gradient {
-            background: linear-gradient(135deg, #FFF 30%, #D4AF37 70%, #F5E093 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .gold-metallic-gradient {
-            background: linear-gradient(135deg, #bf953f 0%, #fcf6ba 25%, #b38728 50%, #fbf5b7 75%, #aa771c 100%);
-        }
-        /* Custom animations */
-        @keyframes subtleZoom {
-            0% { transform: scale(1.0); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1.0); }
-        }
-        .animate-zoom {
-            animation: subtleZoom 25s infinite ease-in-out;
-        }
-    </style>
 </head>
 <body class="bg-dark-900 text-gray-100 font-sans selection:bg-gold-500 selection:text-dark-900 overflow-x-hidden" x-data="landingApp()">
 
